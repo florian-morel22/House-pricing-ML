@@ -1,4 +1,10 @@
-python==3.10.9
-
-torchvision==0.20.1
+torch
 pandas
+xgboost
+seaborn
+scikit-learn
+torchvision==0.20.1
+hyperopt
+tf-keras
+
+ipykernel
