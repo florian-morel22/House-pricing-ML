@@ -1,13 +1,22 @@
+tqdm
+numpy
 torch
 pandas
+pillow
+pathlib
 xgboost
-seaborn
+matplotlib
 scikit-learn
+transformers
 torchvision==0.20.1
-hyperopt
-tf-keras
 
-ipykernel
+#### Only for exploration notebooks ####
 
-opencv-python==3.4.18.65
-opencv-contrib-python
+# ipykernel
+
+# opencv-python==3.4.18.65
+# opencv-contrib-python
+# hyperopt
+# tf-keras
+# seaborn
+# ...
