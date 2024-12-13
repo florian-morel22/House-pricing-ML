@@ -5,17 +5,15 @@ import torch.nn as nn
 import xgboost as xgb
 import matplotlib.pyplot as plt
 
-from PIL import Image
 from tqdm import tqdm
-from pathlib import Path
 from PIL.ImageFile import ImageFile
 from abc import ABC, abstractmethod
 from torch.utils.data import DataLoader
 from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
 from transformers import AutoImageProcessor, AutoModel
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, r2_score
 
 from utils import ImageStructuredDataset, FromScratchModel, concatenate_imgs, augment_all_images, extract_features
@@ -174,8 +172,7 @@ class CNN_FCNN(Method):
         
     def plot(self):
         pass
-        
-
+       
 class ViT_XGboost(Method):
 
     def __init__(self, augm: bool, extractor_name: str= "facebook/dinov2-small"):
@@ -364,9 +361,4 @@ class ViT_XGboost(Method):
         plt.ylabel('Loss Fuunction')
         plt.title('XGBoost Loss')
         plt.show()
-
-
-
-
-        
 

@@ -5,12 +5,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from PIL import Image
-from PIL.ImageFile import ImageFile
 from tqdm import tqdm
-from torchvision.transforms import v2, ToTensor
+from PIL.ImageFile import ImageFile
 from torch.utils.data import Dataset
-
-Image.open()
+from torchvision.transforms import v2, ToTensor
 
 def concatenate_imgs(images: list[ImageFile], size: int=224) -> Image:
     """
@@ -155,7 +153,7 @@ class ImageStructuredDataset(Dataset):
         return img, struct, label
 
 class FromScratchModel(nn.Module):
-    def __init__(self, img_output_dim=128, structured_input_dim=10, fc_hidden_dim=64, num_outputs=1):
+    def __init__(self, img_output_dim, structured_input_dim, fc_hidden_dim, num_outputs):
         super(FromScratchModel, self).__init__()
         
         # CNN for image processing
@@ -205,4 +203,5 @@ class FromScratchModel(nn.Module):
         
         # Final regression output
         output = self.fc_combined(combined_features)
+
         return output
