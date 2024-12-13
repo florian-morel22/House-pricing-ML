@@ -2,6 +2,7 @@ import argparse
 import pandas as pd
 
 from PIL import Image
+from PIL.ImageFile import ImageFile
 from pathlib import Path
 
 from methods import CNN_FCNN, ViT_XGboost
@@ -37,7 +38,7 @@ def load_text_data(path_struct_data: Path, path_uszip_data: Path, debug: bool=Fa
     return global_df
 
 
-def load_image_data(path_image: Path, house_idx: list[int]) -> dict[int, list[Image]]:
+def load_image_data(path_image: Path, house_idx: list[int]) -> dict[int, list[ImageFile]]:
 
     print(">> Loading Image Data")
 

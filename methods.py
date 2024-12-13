@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from tqdm import tqdm
 from pathlib import Path
+from PIL.ImageFile import ImageFile
 from abc import ABC, abstractmethod
 from torch.utils.data import DataLoader
 from sklearn.compose import ColumnTransformer
@@ -25,7 +26,7 @@ class Method(ABC):
         self.augm = augm
 
     @abstractmethod
-    def process_data(self, text_df: pd.DataFrame, images: dict[int, list[Image]]) -> pd.DataFrame:
+    def process_data(self, text_df: pd.DataFrame, images: dict[int, list[ImageFile]]) -> pd.DataFrame:
         pass
     
     @abstractmethod
@@ -42,7 +43,7 @@ class CNN_FCNN(Method):
 
         self.target = "Price"
     
-    def process_data(self, text_df: pd.DataFrame, images_data: dict[int, list[Image]]) -> pd.DataFrame:
+    def process_data(self, text_df: pd.DataFrame, images_data: dict[int, list[ImageFile]]) -> pd.DataFrame:
         
         X_text_train, X_text_test, y_text_train, y_text_test = self.process_text(text_df)
         images_train, images_test = self.process_image(images_data)
@@ -89,7 +90,7 @@ class CNN_FCNN(Method):
 
         return X_text_train_processed, X_text_test_processed, y_text_train_processed, y_text_test_processed
     
-    def process_image(self, images_data: dict[int, list[Image]]) -> tuple[list[Image]]:
+    def process_image(self, images_data: dict[int, list[ImageFile]]) -> tuple[list[ImageFile]]:
 
         images_train = [images_data[idx] for idx in self.train_idx]
         images_test = [images_data[idx] for idx in self.test_idx]
@@ -99,9 +100,9 @@ class CNN_FCNN(Method):
             images_train = augment_all_images(images_train)
 
         print(">> Train Image Concatenation")
-        concatenate_images_train: list[Image] = [concatenate_imgs(imgs) for imgs in tqdm(images_train)]
+        concatenate_images_train: list[ImageFile] = [concatenate_imgs(imgs) for imgs in tqdm(images_train)]
         print(">> Test Image Concatenation")
-        concatenate_images_test: list[Image] = [concatenate_imgs(imgs) for imgs in tqdm(images_test)]
+        concatenate_images_test: list[ImageFile] = [concatenate_imgs(imgs) for imgs in tqdm(images_test)]
 
         return concatenate_images_train, concatenate_images_test
 
@@ -183,7 +184,7 @@ class ViT_XGboost(Method):
         self.extractor_name = extractor_name
         self.target = "Price"
 
-    def process_data(self, text_df: pd.DataFrame, images_data: dict[int, list[Image]]) -> pd.DataFrame:
+    def process_data(self, text_df: pd.DataFrame, images_data: dict[int, list[ImageFile]]) -> pd.DataFrame:
         
         X_text_train, X_text_test, self.y_train, self.y_test = self.process_text(text_df)
         images_features_train, images_features_test = self.process_image(images_data)
@@ -244,7 +245,7 @@ class ViT_XGboost(Method):
 
         return X_text_train_processed, X_text_test_processed, y_text_train_processed, y_text_test_processed
     
-    def process_image(self, images_data: dict[int, list[Image]]) -> tuple[pd.DataFrame, pd.DataFrame]:
+    def process_image(self, images_data: dict[int, list[ImageFile]]) -> tuple[pd.DataFrame, pd.DataFrame]:
 
         images_train = [images_data[idx] for idx in self.train_idx]
         images_test = [images_data[idx] for idx in self.test_idx]
@@ -254,9 +255,9 @@ class ViT_XGboost(Method):
             images_train = augment_all_images(images_train)
 
         print(">> Train Image Concatenation")
-        concatenated_images_train: list[Image] = [concatenate_imgs(imgs) for imgs in tqdm(images_train)]
+        concatenated_images_train: list[ImageFile] = [concatenate_imgs(imgs) for imgs in tqdm(images_train)]
         print(">> Test Image Concatenation")
-        concatenated_images_test: list[Image] = [concatenate_imgs(imgs) for imgs in tqdm(images_test)]
+        concatenated_images_test: list[ImageFile] = [concatenate_imgs(imgs) for imgs in tqdm(images_test)]
 
         ## Feature Extraction
 

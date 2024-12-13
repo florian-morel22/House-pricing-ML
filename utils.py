@@ -5,11 +5,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from PIL import Image
+from PIL.ImageFile import ImageFile
 from tqdm import tqdm
 from torchvision.transforms import v2, ToTensor
 from torch.utils.data import Dataset
 
-def concatenate_imgs(images: list[Image], size: int=224) -> Image:
+Image.open()
+
+def concatenate_imgs(images: list[ImageFile], size: int=224) -> Image:
     """
     images : list of the 4th images of 1 house
     size : length of 1 side of resized image
@@ -47,7 +50,7 @@ def random_resized_crop(image: Image, min_scale: float=0.9, max_scale: float=1.1
     new_height = int(height * scale_factor)
     return image.resize((new_width, new_height), Image.BILINEAR)
 
-def augment_imgs(images: list[Image]) -> tuple[list[Image]]:
+def augment_imgs(images: list[ImageFile]) -> tuple[list[ImageFile]]:
     """
     From a list of 4 images, this function create a list of transformed images.
     Originals and Transformed images are then mixed to create two list of differents images.
@@ -82,7 +85,7 @@ def augment_imgs(images: list[Image]) -> tuple[list[Image]]:
 
     return house1, house2
 
-def augment_all_images(list_images: list[list[Image]]) -> list[list[Image]]:
+def augment_all_images(list_images: list[list[ImageFile]]) -> list[list[ImageFile]]:
     """
     Return the list of all augmented images
 
@@ -114,7 +117,7 @@ def augment_all_images(list_images: list[list[Image]]) -> list[list[Image]]:
 
     return list_augmented_images
   
-def extract_features(images: list[Image], idxs: list[int], model, processor) -> pd.DataFrame:
+def extract_features(images: list[ImageFile], idxs: list[int], model, processor) -> pd.DataFrame:
     features_list = {}
     for idx, img in tqdm(zip(idxs, images), total=len(images)):
         inputs = processor(images=img, return_tensors="pt")
