@@ -27,7 +27,7 @@ AUGM= #--augm
 3. Run
 
 ```bash
-mak run
+make run
 ```
 
 4. Let the magic happen !
