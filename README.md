@@ -44,6 +44,10 @@ The repository consists of two groups of files:
 
 After the exploratory work conducted in the notebooks, I decided to properly implement 2 methods:
 
+- ViT_XGboost
+- CNN_FCNN
+- Other considered methods
+
 ### ViT_XGboost
 
 ViT_XGboost is a concatenation of a vision transformer to extract the features of the images and a XGboost regressor to predict the price of the house.
@@ -66,3 +70,20 @@ Due to the limited computing power of my computer, I was unable to properly opti
 Here is the **artitecture of the model** :
 
 ![alt ViT_XGboost_diagram](./assets/CNN_FCNN_diagram.jpg)
+
+## Other considered methods
+
+The methods considered but abandoned are as follows:
+
+- Applying PCA to reduce the number of features extracted from the images.
+- Replacing XGBoost with other models such as Random Forest, SVR, or a Neural Network, as suggested in the paper published by the creators of the [dataset](https://arxiv.org/pdf/1609.08399.pdf).
+- Applying CNN or feature extractors to each image separately and then concatenating the results. This significantly increases the number of input features to the regressor.
+- Applying the CLIP model to merge the textual data with the images. Then train a regressor on the resultant latent vector.
+
+## Performances
+
+| Method         | Mean Squarred Error | $R^2$     |
+| -------------- | ------------------- | --------- |
+| Paper's method | 0.000959            | 0.95053   |
+| ViT_XGboost    | 0.00165122976       | 0.5938278 |
+| CNN_FCNN       | 0.0013              | 0.5163    |
