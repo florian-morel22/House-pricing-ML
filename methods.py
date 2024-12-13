@@ -118,15 +118,20 @@ class CNN_FCNN(Method):
     def train(self):
 
         train_loader = DataLoader(self.train_dataset, batch_size=self.batchsize, shuffle=True)
+        test_loader = DataLoader(self.test_dataset, batch_size=self.batchsize, shuffle=False)
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(device)
 
         self.train_loss = []
+        self.test_loss = []
 
         print(">> Training")
 
         for epoch in range(self.num_epoch):
+
+            ## TRAIN ##
+
             self.model.train()
             total_loss = 0
             for imgs, structs, targets in train_loader:
@@ -142,18 +147,32 @@ class CNN_FCNN(Method):
                 self.optimizer.step()
                 
                 total_loss += loss.item()
-            
+
             avg_loss = total_loss / len(train_loader)
             self.train_loss.append(avg_loss)
             print(f"Epoch [{epoch+1}/{self.num_epoch}], TrainLoss: {avg_loss:.4f}")
+
+            ## EVALUATION ##
+
+            self.model.eval()
+            test_loss = 0
+            with torch.no_grad():
+                for imgs, structs, targets in test_loader:
+                    imgs, structs, targets = imgs.to(device), structs.to(device), targets.to(device)
+                    outputs = self.model(imgs, structs).squeeze()
+                    loss = self.criterion(outputs, targets)
+                    test_loss += loss.item()
+
+            avg_test_loss = test_loss / len(test_loader)
+            self.test_loss.append(avg_test_loss)
+            print(f"Epoch [{epoch+1}/{self.num_epoch}], TestLoss: {avg_test_loss:.4f}")
+            
 
     def eval(self):
         test_loader = DataLoader(self.test_dataset, batch_size=self.batchsize, shuffle=False)
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(device)
-
-        self.test_loss = []
 
         print(">> Evaluation")
         
@@ -172,7 +191,6 @@ class CNN_FCNN(Method):
                 all_targets.append(targets.cpu().numpy())
 
         avg_test_loss = test_loss / len(test_loader)
-        self.test_loss.append(avg_test_loss)
         print(f"Test Loss (MSE): {avg_test_loss:.4f}")
 
         all_preds = np.concatenate(all_preds)
@@ -180,7 +198,12 @@ class CNN_FCNN(Method):
         print(f"Test Loss (R2): {r2_score(all_targets, all_preds):.4f}")
         
     def plot(self):
-        pass
+        
+        plt.plot(range(self.num_epoch), self.train_loss, label="Train Loss")
+        plt.plot(range(self.num_epoch), self.test_loss, label="Test Loss")
+        plt.legend()
+        plt.title("CNN_FCNN method loss")
+        plt.show()
        
 class ViT_XGboost(Method):
 

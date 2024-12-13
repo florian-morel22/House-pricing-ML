@@ -186,9 +186,10 @@ class FromScratchModel(nn.Module):
         self.fc_combined = nn.Sequential(
             nn.Linear(img_output_dim + fc_hidden_dim, 64),
             nn.ReLU(),
+            # nn.Dropout(0.4),
             nn.Linear(64, num_outputs)
         )
-        
+
     def forward(self, img, structured_data):
         # Image processing
         img_features = self.cnn(img)

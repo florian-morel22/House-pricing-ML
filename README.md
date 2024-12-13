@@ -86,4 +86,4 @@ The methods considered but abandoned are as follows:
 | -------------- | ------------------- | --------- |
 | Paper's method | 0.000959            | 0.95053   |
 | ViT_XGboost    | 0.00165122976       | 0.5938278 |
-| CNN_FCNN       | 0.0013              | 0.5163    |
+| CNN_FCNN       | 0.0013              | 0.5956    |
