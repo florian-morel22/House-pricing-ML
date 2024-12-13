@@ -38,7 +38,7 @@ The repository consists of two groups of files:
 
 - **Notebooks** (`data_processing.ipynb`, `regression.ipynb`): where exploratory work is conducted.
 
-- **Python scripts** (`main.py`, `methods.py`, `utils.py` : which contain the code executed when the `make run` command is launched.
+- **Python scripts** (`main.py`, `methods.py`, `utils.py`) : which contain the code executed when the `make run` command is launched.
 
 ## Learning Methods
 
