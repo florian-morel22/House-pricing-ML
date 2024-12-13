@@ -159,6 +159,8 @@ class CNN_FCNN(Method):
         
         self.model.eval()
         test_loss = 0
+        all_preds = []
+        all_targets = []
         with torch.no_grad():
             for imgs, structs, targets in test_loader:
                 imgs, structs, targets = imgs.to(device), structs.to(device), targets.to(device)
@@ -166,9 +168,16 @@ class CNN_FCNN(Method):
                 loss = self.criterion(outputs, targets)
                 test_loss += loss.item()
 
+                all_preds.append(outputs.cpu().numpy())
+                all_targets.append(targets.cpu().numpy())
+
         avg_test_loss = test_loss / len(test_loader)
         self.test_loss.append(avg_test_loss)
-        print(f"Test Loss: {avg_test_loss:.4f}")
+        print(f"Test Loss (MSE): {avg_test_loss:.4f}")
+
+        all_preds = np.concatenate(all_preds)
+        all_targets = np.concatenate(all_targets)
+        print(f"Test Loss (R2): {r2_score(all_targets, all_preds):.4f}")
         
     def plot(self):
         pass
